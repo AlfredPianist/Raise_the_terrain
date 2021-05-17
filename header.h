@@ -102,6 +102,5 @@ void draw_grid(grid_t *grid, SDL_Instance *instance);
 /* Grid transformation - transform_grid.c */
 void rotate_grid(grid_t *grid, int direction);
 void zoom_grid(grid_t *grid, int direction);
-void move_camera(grid_t *grid, int direction);
 
 #endif

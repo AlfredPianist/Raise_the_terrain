@@ -46,21 +46,6 @@ int poll_events(void)
 			/* If page down key or 'F' is pressed */
 			if (key == SDLK_f || key == SDLK_PAGEDOWN)
 				return (SDLK_f);
-			/* If 'O' is pressed */
-			if (key == SDLK_o)
-				return (SDLK_o);
-			/* If 'I' is pressed */
-			if (key == SDLK_i)
-				return (SDLK_i);
-			/* If 'K' is pressed */
-			if (key == SDLK_k)
-				return (SDLK_k);
-			/* If 'J' is pressed */
-			if (key == SDLK_j)
-				return (SDLK_j);
-			/* If 'L' is pressed */
-			if (key == SDLK_l)
-				return (SDLK_l);
 			break;
 		}
 	}

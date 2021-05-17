@@ -52,13 +52,6 @@ int main(int argc, char *argv[])
 		/* Zoom grid */
 		if (key == SDLK_r || key == SDLK_f)
 			zoom_grid(grid, key);
-		/* Move camera */
-		if (key == SDLK_i || key == SDLK_k ||
-		    key == SDLK_j || key == SDLK_l)
-			move_camera(grid, key);
-		/* Reset view */
-		if (key == SDLK_o)
-			array_3d_coord_raise(grid);
 
 		SDL_SetRenderDrawColor(instance.renderer, 0xFF, 0xFF,
 				       0XFF, 0XFF);
