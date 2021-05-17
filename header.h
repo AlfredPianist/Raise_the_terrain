@@ -14,10 +14,14 @@
 /* Grid properties */
 #define X_3D_DIST (16)
 #define Y_3D_DIST (9)
+#define ZOOM (0.9)
+#define Z_RAISE_INCREMENT (1)
+#define CAM_MOVEMENT (5)
 #define X_ISO_OFFSET (WINDOW_WIDTH / 2)
 #define Y_ISO_OFFSET (WINDOW_HEIGHT / 2)
 #define X_INCLINATION (0.8)
 #define Y_INCLINATION (0.7)
+#define Z_RAISE_INCREMENT (1)
 #define ROTATION_ANGLE (2)
 
 /**
@@ -88,11 +92,16 @@ void free_grid(grid_t *grid);
 void darray_side(char *file_path, grid_t *grid);
 void darray_from_file(char *file_path, grid_t *grid);
 
-/* Grid calculation, transformation and projection - draw_grid.c */
+/* Grid calculation and projection - draw_grid.c */
 void print_coord(grid_t *grid, char *type);
-void array_3d_coord(grid_t *grid);
-void rotate_grid(grid_t *grid, int direction);
+void array_3d_coord_init(grid_t *grid);
+void array_3d_coord_raise(grid_t *grid);
 void iso_2d_conv(grid_t *grid);
 void draw_grid(grid_t *grid, SDL_Instance *instance);
+
+/* Grid transformation - transform_grid.c */
+void rotate_grid(grid_t *grid, int direction);
+void zoom_grid(grid_t *grid, int direction);
+void move_camera(grid_t *grid, int direction);
 
 #endif

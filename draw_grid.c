@@ -42,21 +42,18 @@ void print_coord(grid_t *grid, char *type)
 }
 
 /**
- * array_3d_coord - Creates the array of 3d coordinates from the calculation
- *                  of the side of the grid and storing each of the array of
- *                  arrays' numbers as the z coordinate (altitude)
- *                  of the point.
+ * array_3d_coord_init - Creates the array of 3d coordinates from the
+ *                       calculation of the side of the grid.
  * @grid: The grid structure.
  */
-void array_3d_coord(grid_t *grid)
+void array_3d_coord_init(grid_t *grid)
 {
 	long int r, c, side;
 	coord_3d_t **points_array;
-	float **darray, x_dist, y_dist;
+	float x_dist, y_dist;
 	char *err;
 
 	side = grid->side;
-	darray = grid->darray;
 	err = "Error: cannot allocate memory to array\n";
 
 	points_array = malloc(sizeof(*points_array) * side);
@@ -84,7 +81,7 @@ void array_3d_coord(grid_t *grid)
 				((x_dist * side) / 2);
 			points_array[r][c].y = (y_dist * c) -
 				((y_dist * side) / 2);
-			points_array[r][c].z = darray[r][c];
+			points_array[r][c].z = 0;
 		}
 	}
 
@@ -93,57 +90,28 @@ void array_3d_coord(grid_t *grid)
 }
 
 /**
- * rotate_grid - Rotates the grid in either direction (up, down, right or
- *               left).
- * @grid: The grid structure to calculate the new position of the rotated
- *        3d points.
- * @direction: The direction given as input (up, down, right or left).
- */
-void rotate_grid(grid_t *grid, int direction)
+ * array_3d_coord_raise - Projects the z value to the altitude specified in
+ *                        the file stored in the darray array of arrays.
+ * @grid: The grid structure.
+*/
+void array_3d_coord_raise(grid_t *grid)
 {
-	float angle, x_point, y_point, z_point;
 	long int r, c, side;
 	coord_3d_t **points_array;
+	float **darray;
 
 	side = grid->side;
 	points_array = grid->points_3d;
+	darray = grid->darray;
 
-	angle = direction == SDLK_LEFT || direction == SDLK_UP ?
-		ROTATION_ANGLE * M_PI / 180 :
-		ROTATION_ANGLE * -(M_PI / 180);
-
-
-	if (direction == SDLK_LEFT || direction == SDLK_RIGHT)
-	{
-		for (r = 0; r < side; r++)
-			for (c = 0; c < side; c++)
-			{
-				x_point = points_array[r][c].x;
-				y_point = points_array[r][c].y;
-				points_array[r][c].x =
-					(x_point * cos(angle)) -
-					(y_point * sin(angle));
-				points_array[r][c].y =
-					(x_point * sin(angle)) +
-					(y_point *  cos(angle));
-			}
-	}
-	if (direction == SDLK_UP || direction == SDLK_DOWN)
-	{
-		for (r = 0; r < side; r++)
-			for (c = 0; c < side; c++)
-			{
-				y_point = points_array[r][c].y;
-				z_point = points_array[r][c].z;
-				points_array[r][c].y =
-					(y_point * cos(angle)) -
-					(z_point * sin(angle));
-				points_array[r][c].z =
-					(y_point * sin(angle)) +
-					(z_point * cos(angle));
-			}
-	}
-
+	for (r = 0; r < side; r++)
+		for (c = 0; c < side; c++)
+		{
+			if (points_array[r][c].z < darray[r][c])
+				points_array[r][c].z += Z_RAISE_INCREMENT;
+			if (points_array[r][c].z > darray[r][c])
+				points_array[r][c].z -= Z_RAISE_INCREMENT;
+		}
 
 	grid->points_3d = points_array;
 	iso_2d_conv(grid);
