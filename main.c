@@ -23,10 +23,10 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	/* File opening and reading */
+	/* File opening, reading and grid generation */
 	grid = malloc(sizeof(*grid));
 	darray_from_file(argv[1], grid);
-	array_3d_coord(grid);
+	array_3d_coord_init(grid);
 
 	/* SDL Instance creation */
 	if (init_instance(&instance) != 0)
@@ -38,12 +38,27 @@ int main(int argc, char *argv[])
 		SDL_SetRenderDrawColor(instance.renderer, 0, 0, 0, 0);
 		SDL_RenderClear(instance.renderer);
 
+		array_3d_coord_raise(grid);
 		key = poll_events();
+
+		/* Exit program */
 		if (key == 1)
 			break;
+		/* Rotate grid */
 		if (key == SDLK_RIGHT || key == SDLK_LEFT ||
-		    key == SDLK_UP || key == SDLK_DOWN)
+		    key == SDLK_UP || key == SDLK_DOWN ||
+		    key == SDLK_q || key == SDLK_e)
 			rotate_grid(grid, key);
+		/* Zoom grid */
+		if (key == SDLK_r || key == SDLK_f)
+			zoom_grid(grid, key);
+		/* Move camera */
+		if (key == SDLK_i || key == SDLK_k ||
+		    key == SDLK_j || key == SDLK_l)
+			move_camera(grid, key);
+		/* Reset view */
+		if (key == SDLK_o)
+			array_3d_coord_raise(grid);
 
 		SDL_SetRenderDrawColor(instance.renderer, 0xFF, 0xFF,
 				       0XFF, 0XFF);
