@@ -46,6 +46,9 @@ int poll_events(void)
 			/* If page down key or 'F' is pressed */
 			if (key == SDLK_f || key == SDLK_PAGEDOWN)
 				return (SDLK_f);
+			/* If 'Z' is pressed */
+			if (key == SDLK_z)
+				return (SDLK_z);
 			break;
 		}
 	}

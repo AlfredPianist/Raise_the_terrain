@@ -45,14 +45,26 @@ void free_grid(grid_t *grid)
 	side = grid->side;
 	for (i = 0; i < side; i++)
 	{
-		free(grid->darray[i]);
-		free(grid->points_3d[i]);
-		free(grid->iso_2d[i]);
+		if (grid->darray[i])
+			free(grid->darray[i]);
+		if (grid->darray_orig[i])
+			free(grid->darray_orig[i]);
+		if (grid->points_3d[i])
+			free(grid->points_3d[i]);
+		if (grid->iso_2d[i])
+			free(grid->iso_2d[i]);
 	}
-	free(grid->darray);
-	free(grid->points_3d);
-	free(grid->iso_2d);
-	free(grid);
+
+	if (grid->darray)
+		free(grid->darray);
+	if (grid->darray_orig)
+		free(grid->darray_orig);
+	if (grid->points_3d)
+		free(grid->points_3d);
+	if (grid->iso_2d)
+		free(grid->iso_2d);
+	if (grid)
+		free(grid);
 }
 
 /**
@@ -125,16 +137,20 @@ void darray_from_file(char *file_path, grid_t *grid)
 	FILE *file = NULL;
 	char *line = NULL, *token = NULL, *err;
 	size_t line_length = 0;
-	float **altitude_array = NULL;
+	float **altitude_array = NULL, **altitude_array_cpy = NULL;
 	long int row = 0, column = 0;
 
 	err = "Error: cannot allocate memory to array\n";
-
 	darray_side(file_path, grid);
 
 	altitude_array = malloc(sizeof(*altitude_array) * grid->side);
-	if (!altitude_array)
+	altitude_array_cpy = malloc(sizeof(*altitude_array_cpy) * grid->side);
+	if (!altitude_array || !altitude_array_cpy)
 	{
+		if (altitude_array)
+			free(altitude_array);
+		if (altitude_array_cpy)
+			free(altitude_array_cpy);
 		fprintf(stderr, "%s", err);
 		exit(EXIT_FAILURE);
 	}
@@ -145,27 +161,37 @@ void darray_from_file(char *file_path, grid_t *grid)
 		fprintf(stderr, "Error opening file %s\n", file_path);
 		exit(EXIT_FAILURE);
 	}
-
 	while (getline(&line, &line_length, file) != -1)
 	{
 		altitude_array[row] = malloc(sizeof(**altitude_array) *
 					     grid->side);
-		if (!altitude_array[row])
+		altitude_array_cpy[row] = malloc(sizeof(**altitude_array_cpy) *
+						 grid->side);
+		if (!altitude_array[row] || !altitude_array_cpy[row])
 		{
+			for (row = 0; row < grid->side; row++)
+			{
+				if (altitude_array[row])
+					free(altitude_array[row]);
+				if (altitude_array_cpy[row])
+					free(altitude_array_cpy[row]);
+			}
+			free(altitude_array), free(altitude_array_cpy);
 			fprintf(stderr, "%s", err);
 			exit(EXIT_FAILURE);
 		}
 		column = 0;
 		token = strtok(line, " \n");
 		do {
-			altitude_array[row][column++] = atof(token);
+			altitude_array[row][column] =
+				altitude_array_cpy[row][column] = atof(token);
 			token = strtok(NULL, " \n");
+			column++;
 		} while (token);
 		row++;
 	}
-
-	grid->darray = altitude_array;
-
+	grid->darray_orig = altitude_array;
+	grid->darray = altitude_array_cpy;
 	free(line);
 	fclose(file);
 }

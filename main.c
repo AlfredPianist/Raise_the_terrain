@@ -52,6 +52,9 @@ int main(int argc, char *argv[])
 		/* Zoom grid */
 		if (key == SDLK_r || key == SDLK_f)
 			zoom_grid(grid, key);
+		/* Reset grid */
+		if (key == SDLK_z)
+			array_3d_coord_reinit(grid);
 
 		SDL_SetRenderDrawColor(instance.renderer, 0xFF, 0xFF,
 				       0XFF, 0XFF);

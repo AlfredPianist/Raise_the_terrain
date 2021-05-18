@@ -1,47 +1,6 @@
 #include "header.h"
 
 /**
- * print_coord - Prints coordinates either 2d or 3d ones.
- * @grid: The grid structure.
- * @type: The type of coordinates to be printed, either 2D or 3D.
- */
-void print_coord(grid_t *grid, char *type)
-{
-	long int r, c, counter, side;
-	coord_3d_t **points_array;
-	coord_2d_t **iso_points;
-
-	points_array = grid->points_3d ? grid->points_3d : NULL;
-	iso_points = grid->iso_2d ? grid->iso_2d : NULL;
-	side = grid->side;
-
-	if (strcmp(type, "3D") == 0 && points_array)
-	{
-		for (r = 0, counter = 1; r < side; r++)
-			for (c = 0; c < side; c++)
-			{
-				printf("coord %ld: ", counter++);
-				printf("x = %.2f ", points_array[r][c].x);
-				printf("y = %.2f ", points_array[r][c].y);
-				printf("z = %.2f\n", points_array[r][c].z);
-			}
-		return;
-	}
-
-	if (strcmp(type, "2D") == 0 && iso_points)
-	{
-		for (r = 0, counter = 1; r < side; r++)
-			for (c = 0; c < side; c++)
-			{
-				printf("coord %ld: ", counter++);
-				printf("x = %.2f ", iso_points[r][c].x);
-				printf("y = %.2f\n", iso_points[r][c].y);
-			}
-		return;
-	}
-}
-
-/**
  * array_3d_coord_init - Creates the array of 3d coordinates from the
  *                       calculation of the side of the grid.
  * @grid: The grid structure.
@@ -59,6 +18,7 @@ void array_3d_coord_init(grid_t *grid)
 	points_array = malloc(sizeof(*points_array) * side);
 	if (!points_array)
 	{
+		free_grid(grid);
 		fprintf(stderr, "%s", err);
 		exit(EXIT_FAILURE);
 	}
@@ -72,6 +32,11 @@ void array_3d_coord_init(grid_t *grid)
 					 side);
 		if (!points_array[r])
 		{
+			for (r = 0; r < side; r++)
+				if (points_array[r])
+					free(points_array[r]);
+			free(points_array);
+			free_grid(grid);
 			fprintf(stderr, "%s", err);
 			exit(EXIT_FAILURE);
 		}
@@ -86,7 +51,7 @@ void array_3d_coord_init(grid_t *grid)
 	}
 
 	grid->points_3d = points_array;
-	iso_2d_conv(grid);
+	iso_2d_conv_init(grid);
 }
 
 /**
@@ -118,12 +83,12 @@ void array_3d_coord_raise(grid_t *grid)
 }
 
 /**
- * iso_2d_conv - Converts the array of 3d coordinates to an isometric
- *               projection of 2d coordinates and stores that array into
- *               the grid structure.
+ * iso_2d_conv_init - Converts the array of 3d coordinates to an isometric
+ *                    projection of 2d coordinates and initializes that array
+ *                    into the grid structure.
  * @grid: The grid structure.
  */
-void iso_2d_conv(grid_t *grid)
+void iso_2d_conv_init(grid_t *grid)
 {
 	long int r, c, side;
 	coord_3d_t **points_array;
@@ -137,6 +102,7 @@ void iso_2d_conv(grid_t *grid)
 	iso_points = malloc(sizeof(*iso_points) * side);
 	if (!iso_points)
 	{
+		free_grid(grid);
 		fprintf(stderr, "%s", err);
 		exit(EXIT_FAILURE);
 	}
@@ -146,9 +112,47 @@ void iso_2d_conv(grid_t *grid)
 		iso_points[r] = malloc(sizeof(**iso_points) * side);
 		if (!iso_points[r])
 		{
+			for (r = 0; r < side; r++)
+				if (iso_points[r])
+					free(iso_points[r]);
+			free(iso_points);
+			free_grid(grid);
 			fprintf(stderr, "%s", err);
 			exit(EXIT_FAILURE);
 		}
+		for (c = 0; c < side; c++)
+		{
+			iso_points[r][c].x = X_ISO_OFFSET +
+				(X_INCLINATION *
+				(points_array[r][c].y - points_array[r][c].x));
+			iso_points[r][c].y = Y_ISO_OFFSET +
+				(((1 - Y_INCLINATION) *
+				(points_array[r][c].y + points_array[r][c].x)) -
+				 points_array[r][c].z);
+		}
+	}
+
+	grid->iso_2d = iso_points;
+}
+
+/**
+ * iso_2d_conv - Converts the array of 3d coordinates to an isometric
+ *               projection of 2d coordinates and modifies that array
+ *               into the grid structure.
+ * @grid: The grid structure.
+ */
+void iso_2d_conv(grid_t *grid)
+{
+	long int r, c, side;
+	coord_3d_t **points_array;
+	coord_2d_t **iso_points;
+
+	side = grid->side;
+	points_array = grid->points_3d;
+	iso_points = grid->iso_2d;
+
+	for (r = 0; r < side; r++)
+	{
 		for (c = 0; c < side; c++)
 		{
 			iso_points[r][c].x = X_ISO_OFFSET +

@@ -74,6 +74,7 @@ typedef struct grid_s
 {
 	long int side;
 	float **darray;
+	float **darray_orig;
 	coord_3d_t **points_3d;
 	coord_2d_t **iso_2d;
 } grid_t;
@@ -93,14 +94,16 @@ void darray_side(char *file_path, grid_t *grid);
 void darray_from_file(char *file_path, grid_t *grid);
 
 /* Grid calculation and projection - draw_grid.c */
-void print_coord(grid_t *grid, char *type);
 void array_3d_coord_init(grid_t *grid);
 void array_3d_coord_raise(grid_t *grid);
+void iso_2d_conv_init(grid_t *grid);
 void iso_2d_conv(grid_t *grid);
 void draw_grid(grid_t *grid, SDL_Instance *instance);
 
 /* Grid transformation - transform_grid.c */
+void print_coord(grid_t *grid, char *type);
 void rotate_grid(grid_t *grid, int direction);
 void zoom_grid(grid_t *grid, int direction);
+void array_3d_coord_reinit(grid_t *grid);
 
 #endif
