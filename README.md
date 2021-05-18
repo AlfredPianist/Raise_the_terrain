@@ -6,22 +6,25 @@
   </p>
   <hr>
 	<p>
-		<img src="./gifs/0_Raise_the_terrain_demo_init.gif" alt="0_Raise_the_terrain_demo_init" style="zoom:25%;" />
-		<img src="./gifs/1_Raise_the_terrain_demo_rot_z.gif" alt="1_Raise_the_terrain_demo_rot_z" style="zoom:25%;" />
+		<img src="./gifs/0_Raise_the_terrain_demo_init.gif" alt="0_Raise_the_terrain_demo_init" width="300" height="180" />
+		<img src="./gifs/1_Raise_the_terrain_demo_rot_z.gif" alt="1_Raise_the_terrain_demo_rot_z" width="300" height="180" />
 	</p>
 	<p>
-		<img src="./gifs/2_Raise_the_terrain_demo_rot_y.gif" alt="2_Raise_the_terrain_demo_rot_y" style="zoom:25%;" />
-		<img src="./gifs/3_Raise_the_terrain_demo_rot_x.gif" alt="3_Raise_the_terrain_demo_rot_x" style="zoom:25%;" />
+		<img src="./gifs/2_Raise_the_terrain_demo_rot_y.gif" alt="2_Raise_the_terrain_demo_rot_y" width="300" height="180" />
+		<img src="./gifs/3_Raise_the_terrain_demo_rot_x.gif" alt="3_Raise_the_terrain_demo_rot_x" width="300" height="180" />
 	</p>
 	<p>
-		<img src="./gifs/4_Raise_the_terrain_demo_zoom_reinit.gif" alt="4_Raise_the_terrain_demo_zoom_reinit" style="zoom:25%;" />
+		<img src="./gifs/4_Raise_the_terrain_demo_zoom_reinit.gif" alt="4_Raise_the_terrain_demo_zoom_reinit" width="300" height="180" />
 	</p>
 </div>
 <hr>
 
+## Table of Contents
 
-
-[TOC]
+- [Raise The Terrain](#raise-the-terrain)
+  * [About](#about)
+  * [Compilation, usage and navigation](#compilation--usage-and-navigation)
+- [Author](#author)
 
 ## About
 
