@@ -1,4 +1,4 @@
-# Raise The Terrain
+# Raise The Terrain <a name="raise-the-terrain"></a>
 
 <div align="center">
   <p>
@@ -26,11 +26,11 @@
   * [Compilation, usage and navigation](#compilation--usage-and-navigation)
 - [Author](#author)
 
-## About
+## About <a name="about"></a>
 
 Projects a square grid isometrically and raises (or lowers) each z coordinate from 0 to the altitudes represented as an array given as an input from a file. Developed with the SDL2 graphic library and the C programming language.
 
-## Compilation, usage and navigation
+## Compilation, usage and navigation <a name="compilation--usage-and-navigation"></a>
 
 To compile this project you need to have the SDL2 library installed. If not, you can use the included shell script to install it. Change permissions to this file to run it if necessary:
 
@@ -65,7 +65,7 @@ To interact with the grid, use the following control scheme:
 |  F or Page Down key  |                  Zoom out                   |
 |          Z           |             Reinitializes view              |
 
-# Author
+# Author <a name="author"></a>
 
 ## 👤 Alfredo Delgado Moreno
 
